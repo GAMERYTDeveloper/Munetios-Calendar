@@ -1,8 +1,5 @@
 const bannedCountries = [
-    'IR', // Iran
-    'KP', // North Korea
-    'SY', // Syria
-    'CU'
+    'CN' // China
     // Add more country codes as needed
 ];
 
