@@ -1,85 +1,65 @@
-
-/* GAMERYT Calendar Service Worker */
-const CACHE_VERSION = 'v1.0.0';
-const STATIC_CACHE = `gameryt-calendar-static-${CACHE_VERSION}`;
-const RUNTIME_CACHE = `gameryt-calendar-runtime-${CACHE_VERSION}`;
-
-// Core assets to pre-cache (App Shell)
+const CACHE_NAME = "gameryt-calendar-v4";
 const PRECACHE = [
-  './',
-  './index.html',
-  './manifest.webmanifest',
-  // Icons (optional but recommended)
-  './icons/icon-192.png',
-  './icons/icon-512.png'
+  "./index.html",
+  "./manifest.webmanifest",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png"
 ];
 
-self.addEventListener('install', (event) => {
+// Install: cache only the files that exist
+self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(STATIC_CACHE).then((cache) => cache.addAll(PRECACHE)).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then((cache) =>
+      Promise.all(
+        PRECACHE.map((url) =>
+          fetch(url).then((resp) => {
+            if (resp.ok) {
+              return cache.put(url, resp);
+            } else {
+              console.warn("Skipping missing file:", url);
+            }
+          }).catch(() => {
+            console.warn("Failed to fetch:", url);
+          })
+        )
+      )
+    )
   );
 });
 
-self.addEventListener('activate', (event) => {
+// Activate: clean old caches
+self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(keys.map((key) => {
-        if (![STATIC_CACHE, RUNTIME_CACHE].includes(key)) {
-          return caches.delete(key);
-        }
+        if (key !== CACHE_NAME) return caches.delete(key);
       }))
-    ).then(() => self.clients.claim())
+    )
   );
 });
 
-// Network helpers
-const isHtmlNavigation = (req) => req.mode === 'navigate' || (req.method === 'GET' && req.headers.get('accept') && req.headers.get('accept').includes('text/html'));
-
-self.addEventListener('fetch', (event) => {
-  const req = event.request;
-  const url = new URL(req.url);
-
-  // Don't try to handle non-GET
-  if (req.method !== 'GET') {
-    return;
-  }
-
-  // Avoid caching sync API calls explicitly
-  if (url.pathname.startsWith('/api/sync')) {
-    return; // let it go to the network
-  }
-
-  // App shell navigation fallback (offline-first for pages)
-  if (isHtmlNavigation(req)) {
+// Fetch: network-first for navigations, cache-first for others
+self.addEventListener("fetch", (event) => {
+  if (event.request.mode === "navigate") {
     event.respondWith(
-      fetch(req).then((res) => {
-        // Cache a copy of successful navigations
-        const resClone = res.clone();
-        caches.open(RUNTIME_CACHE).then((cache) => cache.put(req, resClone)).catch(() => {});
-        return res;
-      }).catch(() => {
-        // Offline: return cached page, fallback to app shell
-        return caches.match(req).then((match) => match || caches.match('./index.html'));
+      fetch(event.request).catch(() => caches.match("./index.html"))
+    );
+  } else {
+    event.respondWith(
+      caches.match(event.request).then((cached) => {
+        return (
+          cached ||
+          fetch(event.request).then((resp) => {
+            if (resp && resp.status === 200) {
+              const copy = resp.clone();
+              caches.open(CACHE_NAME).then((cache) =>
+                cache.put(event.request, copy)
+              );
+            }
+            return resp;
+          })
+        );
       })
     );
-    return;
   }
-
-  // Static assets (CSS/JS/images) - stale-while-revalidate
-  event.respondWith(
-    caches.match(req).then((cached) => {
-      const fetchPromise = fetch(req).then((networkRes) => {
-        // Cache good responses
-        if (networkRes && networkRes.status === 200 && networkRes.type === 'basic') {
-          const copy = networkRes.clone();
-          caches.open(RUNTIME_CACHE).then((cache) => cache.put(req, copy)).catch(() => {});
-        }
-        return networkRes;
-      }).catch(() => {
-        // Offline and no cache? return cached if exists
-        return cached;
-      });
-      return cached || fetchPromise;
-    })
-  );
 });
