@@ -516,6 +516,13 @@ input[type="time"] {
             color: #fff;
         }
     </style>
+
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#3c0a7b">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
 </head>
 <body>
      <div class="topbar">
@@ -4083,5 +4090,80 @@ input[type="time"] {
             document.getElementById('todayCalendar').innerText = today.toLocaleDateString(undefined, options);
      </script>
      <script src="bannedCountrys.js"></script>
+
+<script>
+// Service Worker registration
+(function() {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('./sw.js').then(function(reg) {
+        console.log('[GAMERYT] Service Worker registered:', reg.scope);
+        // Update flow
+        reg.addEventListener('updatefound', function() {
+          const newWorker = reg.installing;
+          if (!newWorker) return;
+          newWorker.addEventListener('statechange', function() {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              try {
+                if (confirm('GAMERYT Calendar updated. Refresh now to apply the update?')) {
+                  window.location.reload();
+                }
+              } catch (e) {
+                console.log('Update available');
+              }
+            }
+          });
+        });
+      }).catch(function(err) {
+        console.error('[GAMERYT] SW registration failed:', err);
+      });
+    });
+  }
+})();
+
+// Install prompt (Add to Home Screen)
+(function() {
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Create an "Install" button if not present
+    var topRight = document.querySelector('.top-right');
+    if (topRight && !document.getElementById('installBtn')) {
+      var btn = document.createElement('button');
+      btn.id = 'installBtn';
+      btn.className = 'btn hide-720';
+      btn.title = 'Install GAMERYT Calendar';
+      btn.textContent = 'Install';
+      btn.style.display = 'flex';
+      topRight.insertBefore(btn, topRight.firstChild);
+      btn.addEventListener('click', async function() {
+        try {
+          btn.disabled = true;
+          await deferredPrompt.prompt();
+          const choice = await deferredPrompt.userChoice;
+          if (typeof showToast === 'function') {
+            showToast(choice && choice.outcome === 'accepted' ? 'App installed' : 'Install dismissed');
+          }
+        } catch (e) {
+          console.error(e);
+        } finally {
+          btn.disabled = false;
+          deferredPrompt = null;
+        }
+      });
+    }
+  });
+})();
+
+// Online/Offline toasts
+window.addEventListener('online', function() {
+  if (typeof showToast === 'function') showToast('Back online', 'success');
+});
+window.addEventListener('offline', function() {
+  if (typeof showToast === 'function') showToast('You are offline. Changes work locally.', 'info');
+});
+</script>
+
 </body>
 </html>
