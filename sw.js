@@ -59,7 +59,7 @@ self.addEventListener('fetch', (event) => {
         return res;
       }).catch(() => {
         // Offline: return cached page, fallback to app shell
-        return caches.match(req).then((match) => match || caches.match('./calendar_pwa.html'));
+        return caches.match(req).then((match) => match || caches.match('./index.html'));
       })
     );
     return;
