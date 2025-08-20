@@ -1,9 +1,9 @@
-const CACHE_NAME = "gameryt-calendar-v4";
+const CACHE_NAME = "gameryt-calendar-v5";
 const PRECACHE = [
   "./index.html",
   "./manifest.webmanifest",
   "./icons/icon-192.png",
-  "./icons/icon-512.png"
+  "./icon/icon-512.png"
 ];
 
 // Install: cache only the files that exist
