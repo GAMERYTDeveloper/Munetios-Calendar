@@ -1,7 +1,7 @@
   {
   "name": "GAMERYT Calendar",
   "short_name": "Calendar",
-  "start_url": "./index.html",
+  "start_url": "./new/index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
