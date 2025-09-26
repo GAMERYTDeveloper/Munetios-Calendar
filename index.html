@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Munetios Calendar</title>
-    <link rel="manifest" href="manifest.webmanifest">
     <link rel="icon" href="icons/icon-192.png" type="image/x-icon">
 <meta name="theme-color" content="#3c0a7b">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -17,6 +16,7 @@
             background-color: #f0f0f0;
             margin: 0;
             padding: 0;
+            
         }
         body.dark-mode {
             background-color: #2b0053;
@@ -78,6 +78,11 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             gap: 20px; /* Add gap between left and right */
         }
+        .topbar, .content {
+             min-width: 1800px;
+        }
+        
+       
     .apps-wrapper {
         max-width: 420px;
         margin: 0 auto;
@@ -152,7 +157,31 @@
             font-size: 15px;
         }
     }
-
+    .announcement {
+        background: #ffb347;
+        color: #3c0a7b;
+        font-weight: bold;
+        padding: 12px 0;
+        text-align: center;
+        font-size: 16px;
+        border-bottom: 2px solid #ff9800;
+        letter-spacing: 0.01em;
+        width: 100%;
+        min-width: 0;
+    }
+    .announcement a {
+        color: #3c0a7b;
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    body.dark-mode .announcement {
+        background: #3c0a7b;
+        color: #ffb347;
+        border-bottom: 2px solid #ffb347;
+    }
+    body.dark-mode .announcement a {
+        color: #ffb347;
+    }
     body.dark-mode .apps-wrapper {
         background: #3c0a7b;
         box-shadow: 0 4px 24px rgba(44,0,83,0.25);
@@ -242,7 +271,7 @@
             height: calc(100vh - 60px);
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
             position: fixed;
-            top: 70px;
+            top: 120px;
             left: 0;
             overflow-y: auto;
             padding: 20px;
@@ -288,28 +317,8 @@
             display: none;
         }
 
-        @media (max-width: 1144px) {
-            .more-icon {
-                display: block !important;
-            }
-
-            #todayBtn {
-                display: none;
-            }
-
-        }
-
-        @media (max-width: 1090px) {
-            .create-label {
-                display: none;
-            }
-        }
-
-        @media (max-width: 1020px) {
-            .weekDropdown {
-                display: none;
-            }
-        }
+        
+       
 
         .btn {
             position: relative;
@@ -440,15 +449,6 @@ input[type="time"] {
             flex-wrap: nowrap;
         }
 
-        @media (max-width: 1270px) {
-            .search-bar {
-                display: none !important;
-            }
-            #searchIconMobile {
-                display: block !important;
-            }
-        }
-
         @media (max-width: 890px) {
             .sidebar {
                 display: none !important;
@@ -468,43 +468,49 @@ input[type="time"] {
         }
 
 
-        @media (max-width: 720px) {
-                .hide-720 {
-                    display: none !important;
-                }
-        }
 
-        @media (max-width: 600px) {
+        @media (max-width: 440px) {
             /* Hide logo and logo-text */
             .logo,
             .logo-text {
-                display: none !important;
+            display: none !important;
             }
             /* Move Today calendar to center */
             .today-calendar {
-                position: absolute;
-                left: 50%;
-                transform: translateX(-50%);
-                margin-left: 0 !important;
-                width: max-content;
-                text-align: center;
-                z-index: 2;
-                font-size: 15px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-left: 0 !important;
+            width: max-content;
+            text-align: center;
+            z-index: 2;
+            font-size: 15px;
             }
             /* Hide help, events, settings, app icons */
             .help-btn,
             .events-icon,
             .settings-icon,
             .app-icon {
-                display: none !important;
+            display: none !important;
+            }
+            /* Hide Today button, search bar, view dropdown, create button */
+            #todayBtn,
+            .search-bar,
+            .weekDropdown,
+            .btn.hide-720,
+            #calendarViewSelect {
+            display: none !important;
             }
             /* Show more-icon */
             .more-icon {
-                display: block !important;
+            display: block !important;
             }
             /* Make topbar relative for absolute positioning */
             .topbar {
-                position: relative !important;
+            position: relative !important;
+            }
+            .topbar, .content {
+             min-width: 0;
             }
         }
 
@@ -524,13 +530,15 @@ input[type="time"] {
         }
     </style>
 
-  <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#3c0a7b">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 </head>
+<div class="announcement">
+    <span>Starting on October 15 2025 This classic will be no longer available. You can export your data before this date. Munetios Calendar New link: <a href="https://calendar.munetios.com">https://calendar.munetios.com</a></span>
+</div>
 <body>
      <div class="topbar">
         <div class="top-left">
@@ -1121,6 +1129,9 @@ input[type="time"] {
                     }
                 });
             </script>
+            <button class="btn" title="Go to New version">
+                <a href="https://calendar.munetios.com/new" style="color:inherit; white-space: nowrap; text-decoration:none;">Go to new version of Munetios Calendar</a>
+            </button>
             <button class="btn hide-720" title="Create">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-label="Add Icon" xmlns="http://www.w3.org/2000/svg">
                     <line x1="10" y1="4" x2="10" y2="16" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
@@ -4077,80 +4088,6 @@ input[type="time"] {
             document.getElementById('todayCalendar').innerText = today.toLocaleDateString(undefined, options);
      </script>
      <script src="bannedcountrys.js"></script>
-
-<script>
-// Service Worker registration
-(function() {
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('./sw.js').then(function(reg) {
-        console.log('[GAMERYT] Service Worker registered:', reg.scope);
-        // Update flow
-        reg.addEventListener('updatefound', function() {
-          const newWorker = reg.installing;
-          if (!newWorker) return;
-          newWorker.addEventListener('statechange', function() {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              try {
-                if (confirm('GAMERYT Calendar updated. Refresh now to apply the update?')) {
-                  window.location.reload();
-                }
-              } catch (e) {
-                console.log('Update available');
-              }
-            }
-          });
-        });
-      }).catch(function(err) {
-        console.error('[GAMERYT] SW registration failed:', err);
-      });
-    });
-  }
-})();
-
-// Install prompt (Add to Home Screen)
-(function() {
-  let deferredPrompt = null;
-  window.addEventListener('beforeinstallprompt', function(e) {
-    e.preventDefault();
-    deferredPrompt = e;
-    // Create an "Install" button if not present
-    var topRight = document.querySelector('.top-right');
-    if (topRight && !document.getElementById('installBtn')) {
-      var btn = document.createElement('button');
-      btn.id = 'installBtn';
-      btn.className = 'btn hide-720';
-      btn.title = 'Install GAMERYT Calendar';
-      btn.textContent = 'Install';
-      btn.style.display = 'flex';
-      topRight.insertBefore(btn, topRight.firstChild);
-      btn.addEventListener('click', async function() {
-        try {
-          btn.disabled = true;
-          await deferredPrompt.prompt();
-          const choice = await deferredPrompt.userChoice;
-          if (typeof showToast === 'function') {
-            showToast(choice && choice.outcome === 'accepted' ? 'App installed' : 'Install dismissed');
-          }
-        } catch (e) {
-          console.error(e);
-        } finally {
-          btn.disabled = false;
-          deferredPrompt = null;
-        }
-      });
-    }
-  });
-})();
-
-// Online/Offline toasts
-window.addEventListener('online', function() {
-  if (typeof showToast === 'function') showToast('Back online', 'success');
-});
-window.addEventListener('offline', function() {
-  if (typeof showToast === 'function') showToast('You are offline. Changes work locally.', 'info');
-});
-</script>
 
 </body>
 </html>
