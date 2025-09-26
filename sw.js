@@ -1,6 +1,8 @@
 const CACHE_NAME = "gameryt-calendar-v5";
 const PRECACHE = [
   "./index.html",
+  "./new",
+  "./new/index.html",
   "./manifest.webmanifest",
   "./icons/icon-192.png",
   "./icon/icon-512.png"
