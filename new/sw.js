@@ -1,7 +1,7 @@
 const CACHE_NAME = "munetios-calendar-new-v1";
 const PRECACHE = [
-  "./index.html",
-  "./logo.png",
+  "./new/index.html",
+  "./new/logo.png",
   "../manifest.webmanifest",
   "../icons/icon-192.png",
   "../icon/icon-512.png"
