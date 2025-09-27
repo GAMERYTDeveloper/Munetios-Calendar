@@ -13,6 +13,16 @@
     <meta name="author" content="GAMERYTDeveloper">
     <meta name="theme-color" content="#270e33">
     <link rel="manifest" href="./new/manifest.webmanifest">
+    <script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./new/sw.js").then(
+      (reg) => console.log("SW registered:", reg),
+      (err) => console.error("SW registration failed:", err)
+    );
+  });
+}
+</script>
 
     <style>
         html {
