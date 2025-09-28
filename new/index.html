@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Munetios Calendar Beta v1</title>
+    <title>Munetios Calendar Beta v2</title>
     <link rel="icon" type="image/x-icon" href="logo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="logo.png">
     <link rel="icon" type="image/png" sizes="32x32" href="logo.png">
@@ -12,7 +12,7 @@
     <meta name="keywords" content="calendar, events, schedule, productivity, Munetios, GAMERYTDeveloper, Better Calendar, modern calendar, event management">
     <meta name="author" content="GAMERYTDeveloper">
     <meta name="theme-color" content="#270e33">
-    <link rel="manifest" href="./new/manifest.webmanifest">
+   <link rel="manifest" href="./new/manifest.webmanifest">
     <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -23,7 +23,6 @@ if ("serviceWorker" in navigator) {
   });
 }
 </script>
-
     <style>
         html {
             scroll-behavior: smooth;
@@ -966,12 +965,12 @@ html {
         <div class="top-left" style="flex-direction: row !important; align-items: center; gap: 10px; display: flex !important;">
             <div class="menu-bar" style="display: flex; align-items: center; gap: 10px;">
                 <span style="font-weight: bold;" id="todayDate"></span>
-                <button class="btn" id="arrowLeftBtn" title="Previous Month" aria-label="Previous">
+                <button class="btn hide-600" id="arrowLeftBtn" title="Previous Month" aria-label="Previous">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button>
-                <button class="btn" id="arrowRightBtn2" title="Next Month" aria-label="Next">
+                <button class="btn hide-600" id="arrowRightBtn2" title="Next Month" aria-label="Next">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
@@ -1173,6 +1172,31 @@ html {
                         </select>
                     </li>
                     <li>
+                        <label for="holidayRegionShow" style="margin-right: 12px;">Show Holidays For</label>
+                        <select id="holidayRegionShow">
+                            <option value="all" selected>All regions</option>
+                            <option value="US">United States</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="CA">Canada</option>
+                            <option value="AU">Australia</option>
+                            <option value="IN">India</option>
+                            <option value="FR">France</option>
+                            <option value="DE">Germany</option>
+                            <option value="CN">China</option>
+                            <option value="JP">Japan</option>
+                            <option value="BR">Brazil</option>
+                            <option value="ZA">South Africa</option>
+                            <option value="MX">Mexico</option>
+                            <option value="RU">Russia</option>
+                            <option value="KR">South Korea</option>
+                            <option value="Islamic">Islamic</option>
+                            <option value="Jewish">Jewish</option>
+                            <option value="Buddhist">Buddhist</option>
+                            <option value="Christian">Christian</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </li>
+                    <li>
                         <label for="reduceTransparencyCheckbox" style="margin-right: 12px;">Reduce Transparency</label>
                         <label class="toggle-switch" for="reduceTransparencyCheckbox">
                             <input type="checkbox" id="reduceTransparencyCheckbox">
@@ -1239,6 +1263,10 @@ html {
         </div>
     </div>
     <script>
+
+
+
+
         function showWelcomeScreen() {
             // Only show once per user (localStorage)
             if (localStorage.getItem('welcomeScreenClosed') === 'true') {
@@ -1553,6 +1581,61 @@ html {
         reduceTransparencyCheckbox.onchange = function() {
             localStorage.setItem('reduceTransparency', reduceTransparencyCheckbox.checked);
             applyTransparency(reduceTransparencyCheckbox.checked);
+        };
+
+        // Show Holidays For Region functionality
+        const holidayRegionShow = document.getElementById('holidayRegionShow');
+        holidayRegionShow.value = localStorage.getItem('holidayRegionShow') || 'all';
+
+        function getFilteredHolidays(year) {
+            const region = holidayRegionShow.value;
+            const allHolidays = getHolidays(year);
+            if (!region || region === 'all') return allHolidays;
+            // Filter by region/country code in holiday name or type
+            const regionMap = {
+            US: '(US)',
+            UK: '(UK)',
+            CA: '(CA)',
+            AU: '(AU)',
+            IN: '(IN)',
+            FR: '(FR)',
+            DE: '(DE)',
+            CN: '(CN)',
+            JP: '(JP)',
+            BR: '(BR)',
+            ZA: '(ZA)',
+            MX: '(MX)',
+            RU: '(RU)',
+            KR: '(KR)',
+            Islamic: '(Islamic)',
+            Jewish: '(Jewish)',
+            Buddhist: '(Buddhist)',
+            Christian: '(Christian)',
+            Other: '(Other)'
+            };
+            const regionTag = regionMap[region] || '';
+            let filtered = {};
+            Object.entries(allHolidays).forEach(([date, name]) => {
+            if (regionTag && name.includes(regionTag)) {
+                filtered[date] = name;
+            }
+            });
+            return filtered;
+        }
+
+        // Patch renderCalendar to use filtered holidays
+        const origRenderCalendarRegion = renderCalendar;
+        renderCalendar = function(year, month) {
+            // Use filtered holidays
+            window.getUSHolidays = getFilteredHolidays;
+            origRenderCalendarRegion(year, month);
+            // Restore getUSHolidays for other code if needed
+            window.getUSHolidays = getFilteredHolidays;
+        };
+
+        holidayRegionShow.onchange = function() {
+            localStorage.setItem('holidayRegionShow', holidayRegionShow.value);
+            renderCalendar(currentYear, currentMonth);
         };
 
         // Language selection
@@ -3952,12 +4035,25 @@ wrapper.querySelector('#closeContextWrapperBtn').onclick = function() {
 
             // Add more countries/regions as needed...
 
-            // Combine all holidays
-            return Object.assign(
-                {},
+            // Combine all holidays, merging multiple holidays on the same date
+            const allHolidayObjs = [
                 us, uk, ca, au, inHolidays, fr, de, cn, jp, br, za, mx, ru, kr,
                 islamic, jewish, buddhist, christian
-            );
+            ];
+            const merged = {};
+            allHolidayObjs.forEach(obj => {
+                Object.entries(obj).forEach(([date, name]) => {
+                    if (merged[date]) {
+                        // Avoid duplicates
+                        if (!merged[date].includes(name)) {
+                            merged[date] += ' | ' + name;
+                        }
+                    } else {
+                        merged[date] = name;
+                    }
+                });
+            });
+            return merged;
         }
         // For compatibility with existing code, alias getUSHolidays to getHolidays
         function getUSHolidays(year) {
