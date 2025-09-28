@@ -13,16 +13,14 @@
     <meta name="author" content="GAMERYTDeveloper">
     <meta name="theme-color" content="#270e33">
    <link rel="manifest" href="./new/manifest.webmanifest">
-    <script>
+  <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./new/sw.js").then(
-      (reg) => console.log("SW registered:", reg),
-      (err) => console.error("SW registration failed:", err)
-    );
-  });
+  navigator.serviceWorker.register("./sw.js")
+    .then(() => console.log("SW registered"))
+    .catch(err => console.error("SW failed", err));
 }
 </script>
+
     <style>
         html {
             scroll-behavior: smooth;
