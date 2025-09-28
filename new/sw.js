@@ -1,11 +1,11 @@
-const CACHE_NAME = "munetios-calendar-new-v2";
+const CACHE_NAME = "munetios-calendar-v3";
 const PRECACHE = [
-  "./new/index.html",
-  "./new/logo.png",
-  "./new/manifest.webmanifest"
+  "./index.html",
+  "./logo.png",
+  "./manifest.webmanifest"
 ];
 
-// Install: cache core files
+// Install and cache core files
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) =>
@@ -14,7 +14,7 @@ self.addEventListener("install", (event) => {
   );
 });
 
-// Activate: clean old caches
+// Activate and clean old caches
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
@@ -27,19 +27,18 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// Fetch: cache-first for static, network-first for pages
+// Fetch handler
 self.addEventListener("fetch", (event) => {
   if (event.request.mode === "navigate") {
-    // For HTML navigation
+    // Always try network first, fallback to cached index.html
     event.respondWith(
-      fetch(event.request).catch(() => caches.match("./new/index.html"))
+      fetch(event.request).catch(() => caches.match("./index.html"))
     );
   } else {
-    // For assets (images, CSS, JS)
+    // Cache-first for static assets
     event.respondWith(
       caches.match(event.request).then((cached) => {
         if (cached) return cached;
-
         return fetch(event.request).then((resp) => {
           if (resp && resp.status === 200 && resp.type === "basic") {
             const copy = resp.clone();
@@ -48,11 +47,6 @@ self.addEventListener("fetch", (event) => {
             );
           }
           return resp;
-        }).catch(() => {
-          // Fallback for images (optional: serve logo.png)
-          if (event.request.destination === "image") {
-            return caches.match("./new/logo.png");
-          }
         });
       })
     );
