@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Munetios Calendar Beta v2</title>
+    <title>Munetios Calendar Beta v1</title>
     <link rel="icon" type="image/x-icon" href="logo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="logo.png">
     <link rel="icon" type="image/png" sizes="32x32" href="logo.png">
@@ -12,7 +12,7 @@
     <meta name="keywords" content="calendar, events, schedule, productivity, Munetios, GAMERYTDeveloper, Better Calendar, modern calendar, event management">
     <meta name="author" content="GAMERYTDeveloper">
     <meta name="theme-color" content="#270e33">
-   <link rel="manifest" href="./new/manifest.webmanifest">
+     <link rel="manifest" href="./new/manifest.webmanifest">
   <script>
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./sw.js")
@@ -906,33 +906,7 @@ html {
                 </svg>
             </div>
             <div class="apps-menu">
-                <div class="item">
-                    <a href="https://calendar.munetios.com">Munetios Calendar Classic</a>
-                </div>
-                <div class="item">
-                    <a href="https://tasks.munetios.com">Munetios Tasks</a>
-                </div>
-                <div class="item">
-                    <a href="https://notes.munetios.com">Munetios Notes</a>
-                </div>
-                <div class="item">
-                    <a href="https://calculator.munetios.com">Munetios Calculator</a>
-                </div>
-                <div class="item">
-                    <a href="https://docs.munetios.com">Munetios Docs</a>
-                </div>
-                <div class="item">
-                    <a href="https://www.munetios.com">Munetios Search</a>
-                </div>
-                <div class="item">
-                    <a href="https://video.munetios.com">YouVidPlay</a>
-                </div>
-                <div class="item">
-                    <a href="https://weather.munetios.com">Munetios Weather</a>
-                </div>
-                <div class="item">
-                    <a href="https://tetris.munetios.com">Munetios Tetris</a>
-                </div>
+              <iframe src="https://www.munetios.com/apps" width="401" height="600" sandbox="allow-scripts allow-same-origin allow-popups" frameborder="0"></iframe>
             </div>
             <div class="more-icon" id="moreBtn"     title="More options" aria-label="More options">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2382,9 +2356,48 @@ html {
 
 
 
+        // Help modal logic
+        // Create help modal if not already present
+        if (!document.getElementById('helpModal')) {
+            const helpModal = document.createElement('div');
+            helpModal.className = 'modal';
+            helpModal.id = 'helpModal';
+            helpModal.innerHTML = `
+                <div class="modal-content liquid-glass" style="max-width: 480px;">
+                    <span class="close" id="closeHelpModal" style="right:18px;top:18px;">&times;</span>
+                    <h2 style="text-align:center;color:#a770ef;">Help &amp; About</h2>
+                    <div style="margin:18px 0 24px 0;line-height:1.6;font-size:1.08em;color:#fff;">
+                        <b>Munetios Calendar</b> is a modern, user-friendly calendar application designed to help you manage your schedule with ease.<br><br>
+                        <b>Features:</b>
+                        <ul style="margin:10px 0 18px 18px; color:#e0e0e0;">
+                            <li>Events, holidays, birthdays (birthdays repeat every year)</li>
+                            <li>Tasks integration</li>
+                            <li>Liquid glass UI, fully responsive</li>
+                            <li>Apps menu for quick access to Munetios apps</li>
+                            <li>Backup &amp; restore, favorites, search, and more</li>
+                        </ul>
+                        <b>Need help?</b> Contact <a href="mailto:minecraftgamer97529@gmail.com" style="color:#a770ef;">minecraftgamer97529@gmail.com</a>
+                    </div>
+                    <div style="margin-top:18px;padding-top:12px;border-top:1px solid rgba(167,112,239,0.18);font-size:0.98em;color:#a770ef;">
+                        <b>Version History</b>
+                        <ul style="margin:8px 0 0 18px; color:#e0e0e0;">
+                            <li><b>1.02</b> – New apps menu and made birthdays repeat in year</li>
+                            <li><b>1.01</b> – Bug fixes and improvements</li>
+                            <li><b>1.00</b> – Released</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(helpModal);
+            document.getElementById('closeHelpModal').onclick = function() {
+                helpModal.style.display = 'none';
+            };
+        }
+
+        // Show help modal on help icon click
         document.querySelector('.help-icon').addEventListener('click', function(e) {
             e.stopPropagation();
-            showToast('Welcome to Munetios Calendar! So we have great features like it has events, holidays, tasks, etc. The UI is liquid glass and responsive. Do more with Munetios Calendar. ', { duration: 10000 });
+            document.getElementById('helpModal').style.display = 'flex';
         });
 
         // Events icon click: open events modal and show all events tab
@@ -3643,43 +3656,51 @@ wrapper.querySelector('#closeContextWrapperBtn').onclick = function() {
             let date = 1;
             const today = new Date(year, month, 1);
             for (let i = 0; i < rows.length; i++) {
-                const cells = rows[i].children;
-                for (let j = 0; j < cells.length; j++) {
-                    if (
-                        (i === 0 && j < today.getDay()) ||
-                        date > new Date(year, month + 1, 0).getDate()
-                    ) {
-                        // empty cell
+            const cells = rows[i].children;
+            for (let j = 0; j < cells.length; j++) {
+                if (
+                (i === 0 && j < today.getDay()) ||
+                date > new Date(year, month + 1, 0).getDate()
+                ) {
+                // empty cell
+                } else {
+                const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(date).padStart(2,'0')}`;
+                // Get events for this date, including birthdays that repeat every year
+                const evs = events.filter(ev => {
+                    if (ev.type === 'birthday') {
+                    // Match MM-DD regardless of year
+                    return ev.date && ev.date.slice(5) === dateStr.slice(5);
                     } else {
-                        const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(date).padStart(2,'0')}`;
-                        const evs = getEventsForDate(dateStr);
-                        if (evs.length) {
-                            evs.forEach(ev => {
-                                const div = document.createElement('div');
-                                div.style.fontSize = '0.85em';
-                                div.style.marginTop = '2px';
-                                div.style.color = ev.type === 'birthday' ? '#ffb347' : (ev.type === 'holiday' ? '#a770ef' : '#fff');
-                                div.style.fontWeight = 'bold';
-                                if (ev.type === 'birthday') {
-                                    div.textContent = `🎂 ${ev.name}'s Birthday`;
-                                } else if (ev.type === 'holiday') {
-                                    div.textContent = `${ev.title} (${ev.country})`;
-                                } else {
-                                    div.textContent = ev.title;
-                                    if (ev.time) {
-                                        let [h, m] = ev.time.split(':');
-                                        h = parseInt(h, 10);
-                                        let ampm = h < 12 ? 'AM' : 'PM';
-                                        let hour12 = h % 12 === 0 ? 12 : h % 12;
-                                        div.textContent += ` (${hour12}:${m} ${ampm})`;
-                                    }
-                                }
-                                cells[j].appendChild(div);
-                            });
-                        }
-                        date++;
+                    return ev.date === dateStr;
                     }
+                });
+                if (evs.length) {
+                    evs.forEach(ev => {
+                    const div = document.createElement('div');
+                    div.style.fontSize = '0.85em';
+                    div.style.marginTop = '2px';
+                    div.style.color = ev.type === 'birthday' ? '#ffb347' : (ev.type === 'holiday' ? '#a770ef' : '#fff');
+                    div.style.fontWeight = 'bold';
+                    if (ev.type === 'birthday') {
+                        div.textContent = `🎂 ${ev.name}'s Birthday`;
+                    } else if (ev.type === 'holiday') {
+                        div.textContent = `${ev.title} (${ev.country})`;
+                    } else {
+                        div.textContent = ev.title;
+                        if (ev.time) {
+                        let [h, m] = ev.time.split(':');
+                        h = parseInt(h, 10);
+                        let ampm = h < 12 ? 'AM' : 'PM';
+                        let hour12 = h % 12 === 0 ? 12 : h % 12;
+                        div.textContent += ` (${hour12}:${m} ${ampm})`;
+                        }
+                    }
+                    cells[j].appendChild(div);
+                    });
                 }
+                date++;
+                }
+            }
             }
         }
 
