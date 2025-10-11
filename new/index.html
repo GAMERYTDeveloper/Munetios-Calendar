@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Munetios Calendar Beta v1</title>
+    <title>Munetios Calendar</title>
     <link rel="icon" type="image/x-icon" href="logo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="logo.png">
     <link rel="icon" type="image/png" sizes="32x32" href="logo.png">
@@ -23,7 +23,9 @@ if ("serviceWorker" in navigator) {
 
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-        
+        * {
+                font-family: Poppins, Arial, sans-serif !important; 
+        }
         html {
             scroll-behavior: smooth;
             /* Optional: subtle fade for anchor jumps */
@@ -56,13 +58,11 @@ if ("serviceWorker" in navigator) {
         body {
             margin: 0;
             padding: 0;
-            font-family: Poppins, Arial, sans-serif;
+        
             background: linear-gradient(120deg, #270e33 0%, #4800a7 100%);
             background-size: 200% 200%;
             animation: bgMove 12s ease-in-out infinite;
             color: #e0e0e0;
-            max-width: 2160px;
-            margin: auto;
         }
         @keyframes bgMove {
             0% { background-position: 0% 50%; }
@@ -661,6 +661,9 @@ html {
     align-items: stretch;
     z-index: 1200;
     padding: 12px 10px;
+    height: 100vh;
+    max-height: 700px;
+    overflow-y: auto;
     animation: glassSlideDown 0.4s cubic-bezier(0.4,0,0.2,1);
 }
 .apps-menu.active {
@@ -815,8 +818,9 @@ html {
 
     </style>
     </head>
-    <div class="welcome-screen" id="welcome-screen"></div>
-<body>  
+    
+<body> 
+     <div class="welcome-screen" id="welcome-screen"></div>
     <header class="topbar liquid-glass">
       
         <div class="top-left">
@@ -908,7 +912,7 @@ html {
                 </svg>
             </div>
             <div class="apps-menu">
-              <iframe src="https://www.munetios.com/apps" width="401" height="600" sandbox="allow-scripts allow-same-origin allow-popups" frameborder="0"></iframe>
+              <iframe src="https://www.munetios.com/apps" width="450" height="100%" sandbox="allow-scripts allow-same-origin allow-popups" frameborder="0"></iframe>
             </div>
             <div class="more-icon" id="moreBtn"     title="More options" aria-label="More options">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -920,6 +924,9 @@ html {
             <div class="more-wrapper">
                 <div class="item">
                     <span>Help</span>
+                </div>
+                <div class="item">
+                    <span><a style="text-decoration: none; color: white;" href="about.html">About</a></span>
                 </div>
                 <div class="item">
                     <span>Settings</span>
@@ -1238,140 +1245,575 @@ html {
     </div>
     <script>
 
-
-
-
-        function showWelcomeScreen() {
-            // Only show once per user (localStorage)
-            if (localStorage.getItem('welcomeScreenClosed') === 'true') {
-                document.getElementById('welcome-screen').style.display = 'none';
-                return;
-            }
-            const welcome = document.getElementById('welcome-screen');
-            welcome.style.position = 'fixed';
-            welcome.style.top = '0';
-            welcome.style.left = '0';
-            welcome.style.width = '100vw';
-            welcome.style.height = '100vh';
-            welcome.style.background = 'linear-gradient(120deg, #270e33 0%, #4800a7 100%)';
-            welcome.style.zIndex = '99999';
-            welcome.style.display = 'flex';
-            welcome.style.flexDirection = 'column';
-            welcome.style.justifyContent = 'center';
-            welcome.style.alignItems = 'center';
-            welcome.style.transition = 'opacity 0.7s cubic-bezier(0.4,0,0.2,1)';
-            welcome.innerHTML = `
-                <div id="welcomeRocket" style="margin-bottom:32px;animation:rocketUp 2s cubic-bezier(0.4,0,0.2,1) infinite;">
-                    <svg width="90" height="90" viewBox="0 0 64 64" fill="none">
-                        <g>
-                            <ellipse cx="32" cy="62" rx="8" ry="2.5" fill="#FFD700" opacity="0.7"/>
-                            <path d="M32 4C36 16 44 24 44 32C44 40 36 48 32 60C28 48 20 40 20 32C20 24 28 16 32 4Z" fill="#a770ef" stroke="#fff" stroke-width="2"/>
-                            <circle cx="32" cy="32" r="7" fill="#fff" stroke="#a770ef" stroke-width="2"/>
-                            <rect x="29" y="52" width="6" height="10" rx="3" fill="#FFD700"/>
-                            <polygon points="32,62 29,52 35,52" fill="#FFD700" opacity="0.8"/>
-                            <path d="M32 14 L32 24" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-                            <circle cx="32" cy="12" r="2" fill="#FFD700" opacity="0.9"/>
-                        </g>
-                    </svg>
-                </div>
-                <div id="welcomeText" style="font-size:2.6em;font-weight:bold;color:#fff;text-align:center;letter-spacing:2px;animation:fadeInWelcome 1.2s cubic-bezier(0.4,0,0.2,1);">
-                    WELCOME TO MUNETIOS Calendar
-                </div>
-                <div id="welcomeDesc" style="font-size:1.3em;color:#e0e0e0;text-align:center;margin-top:18px;max-width:500px;animation:fadeInDesc 1.8s cubic-bezier(0.4,0,0.2,1);">
-                    Munetios Calendar is a modern, user-friendly calendar application designed to help you manage your schedule with ease. Enjoy features like events, holidays, tasks, and more. The UI is liquid glass and fully responsive. Do more with Munetios Calendar!
-                </div>
-                <div id="welcomeProgressBar" style="width:320px;height:12px;background:rgba(255,255,255,0.13);border-radius:8px;overflow:hidden;margin-top:32px;">
-                    <div id="welcomeProgress" style="height:100%;width:0%;background:linear-gradient(90deg,#a770ef 0%,#FFD700 100%);border-radius:8px;transition:width 0.2s;"></div>
-                </div>
-            `;
-            // Animate rocket and text
-            const style = document.createElement('style');
-            style.innerHTML = `
-                @keyframes rocketUp {
-                    0% { transform: translateY(40px) scale(0.8); opacity:0.7; }
-                    20% { transform: translateY(0) scale(1.05); opacity:1; }
-                    40% { transform: translateY(-30px) scale(1.1); opacity:1; }
-                    60% { transform: translateY(-60px) scale(1.15); opacity:1; }
-                    80% { transform: translateY(0) scale(1.05); opacity:1; }
-                    100% { transform: translateY(40px) scale(0.8); opacity:0.7; }
-                }
-                @keyframes fadeInWelcome {
-                    0% { opacity:0; transform:scale(0.95);}
-                    100% { opacity:1; transform:scale(1);}
-                }
-                @keyframes fadeInDesc {
-                    0% { opacity:0; transform:translateY(40px);}
-                    100% { opacity:1; transform:translateY(0);}
-                }
-                @keyframes fadeInSection {
-                    0% { opacity:0; transform:translateY(40px);}
-                    100% { opacity:1; transform:translateY(0);}
-                }
-                @keyframes fadeOutWelcome {
-                    0% { opacity:1; }
-                    100% { opacity:0; }
-                }
-            `;
-            document.head.appendChild(style);
-
-            // Animate progress bar for 10 seconds
-            let progress = 0;
-            const progressBar = document.getElementById('welcomeProgress');
-            const interval = setInterval(() => {
-                progress += 0.5;
-                if (progress > 100) progress = 100;
-                progressBar.style.width = progress + '%';
-            }, 50);
-
-            // After 10 seconds, show section 2
-            setTimeout(() => {
-                clearInterval(interval);
-                welcome.innerHTML = `
-                    <div style="margin-bottom:32px;animation:rocketUp 2s cubic-bezier(0.4,0,0.2,1) infinite;">
-                        <svg width="90" height="90" viewBox="0 0 64 64" fill="none">
-                            <g>
-                                <ellipse cx="32" cy="62" rx="8" ry="2.5" fill="#FFD700" opacity="0.7"/>
-                                <path d="M32 4C36 16 44 24 44 32C44 40 36 48 32 60C28 48 20 40 20 32C20 24 28 16 32 4Z" fill="#a770ef" stroke="#fff" stroke-width="2"/>
-                                <circle cx="32" cy="32" r="7" fill="#fff" stroke="#a770ef" stroke-width="2"/>
-                                <rect x="29" y="52" width="6" height="10" rx="3" fill="#FFD700"/>
-                                <polygon points="32,62 29,52 35,52" fill="#FFD700" opacity="0.8"/>
-                                <path d="M32 14 L32 24" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-                                <circle cx="32" cy="12" r="2" fill="#FFD700" opacity="0.9"/>
-                            </g>
-                        </svg>
-                    </div>
-                    <div style="font-size:2.1em;font-weight:bold;color:#fff;text-align:center;letter-spacing:2px;margin-bottom:24px;animation:fadeInSection 1s;">
-                        Get Started with Munetios Calendar
-                    </div>
-                    <div style="font-size:1.2em;color:#e0e0e0;text-align:center;max-width:500px;margin-bottom:24px;animation:fadeInDesc 1.2s;">
-                        Easily manage your events, holidays, and tasks. Enjoy a beautiful, animated experience!
-                    </div>
-                    <button id="doneWelcomeBtn" class="btn" style="margin-bottom:18px;font-size:1.1em;animation:fadeInSection 1.2s;">Done</button>
-                    <div style="position:absolute;bottom:32px;left:50%;transform:translateX(-50%);">
-                        <button id="classicWelcomeBtn" class="btn" style="font-size:1em;">Use Classic Version</button>
-                        <p> <a href="https://www.munetios.com/policies/#/terms">Terms</a> | <a href="https://www.munetios.com/policies/#/privacy">Privacy</a> </p>
-                    </div>
-                `;
-                // Done button closes welcome and sets localStorage
-                document.getElementById('doneWelcomeBtn').onclick = function() {
-                    welcome.style.animation = 'fadeOutWelcome 0.7s cubic-bezier(0.4,0,0.2,1)';
-                    setTimeout(() => {
-                        welcome.style.display = 'none';
-                        localStorage.setItem('welcomeScreenClosed', 'true');
-                    }, 700);
-                };
-                // Classic version button
-                document.getElementById('classicWelcomeBtn').onclick = function() {
-                    window.open('https://calendar.munetios.com/', '_blank');
-                };
-            }, 10000);
+    function showWelcomeScreen() {
+        // Only show once per user (localStorage)
+        if (
+            localStorage.getItem('welcomeScreenClosed') === 'true' ||
+            !navigator.onLine
+        ) {
+            document.getElementById('welcome-screen').style.display = 'none';
+            return;
         }
 
-        // Show on first load
-        document.addEventListener('DOMContentLoaded', showWelcomeScreen);
+        // Calculate network speed (if available)
+        let speed = 1;
+        if (navigator.connection && navigator.connection.downlink) {
+            speed = navigator.connection.downlink;
+        }
 
+        // Determine loadTime (welcome screen visible) and progressTime (progress bar duration)
+        let loadTime, progressTime;
+        if (speed >= 10) {
+            loadTime = 100;
+            progressTime = 1000;
+        } else if (speed >= 5) {
+            loadTime = 500;
+            progressTime = 3000;
+        } else if (speed >= 2) {
+            loadTime = 2000;
+            progressTime = 7000;
+        } else if (speed >= 1) {
+            loadTime = 5000;
+            progressTime = 15000;
+        } else if (speed > 0) {
+            loadTime = 15000;
+            progressTime = 30000;
+        } else {
+            loadTime = 100 + Math.random() * (60000 - 100);
+            progressTime = 1000 + Math.random() * (120000 - 1000);
+        }
+        loadTime = Math.max(100, Math.min(60000, loadTime));
+        progressTime = Math.max(1000, Math.min(120000, progressTime));
 
+        if (navigator.connection && navigator.connection.downlink && navigator.connection.downlink < 0.5) {
+            document.getElementById('welcome-screen').style.display = 'none';
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    document.getElementById('welcome-screen').style.display = 'flex';
+                }, 1000);
+            });
+            return;
+        }
 
+        // Random welcome descriptions
+        const descs = [
+            "Munetios Calendar is a modern, user-friendly calendar application designed to help you manage your schedule with ease. Enjoy features like events, holidays, tasks, and more. The UI is liquid glass and fully responsive. Do more with Munetios Calendar!",
+            "Plan your days with Munetios Calendar. Organize events, track holidays, and manage tasks in a beautiful, animated interface.",
+            "Welcome! Munetios Calendar helps you stay productive with events, birthdays, holidays, and a sleek, responsive design.",
+            "Your time, organized. Munetios Calendar brings you a fast, modern calendar with tasks, favorites, and more.",
+            "All your events, holidays, and tasks in one place. Munetios Calendar is designed for productivity and style.",
+            "Experience the next generation of calendar apps with Munetios Calendar. Responsive, beautiful, and packed with features."
+        ];
+        const randomDesc = descs[Math.floor(Math.random() * descs.length)];
+
+        // Show fetching message in calendar content
+        const calendarContent = document.querySelector('.calendar-content');
+        let oldCalendarHTML = calendarContent.innerHTML;
+        calendarContent.innerHTML = `<div style="color:#a770ef;font-size:1.3em;text-align:center;margin-top:40px;">Fetching the calendar...</div>`;
+
+        const welcome = document.getElementById('welcome-screen');
+        welcome.style.position = 'fixed';
+        welcome.style.top = '0';
+        welcome.style.left = '0';
+        welcome.style.width = '100vw';
+        welcome.style.height = '100vh';
+        welcome.style.background = 'linear-gradient(120deg, #270e33 0%, #4800a7 100%)';
+        welcome.style.zIndex = '99999';
+        welcome.style.display = 'flex';
+        welcome.style.flexDirection = 'column';
+        welcome.style.justifyContent = 'center';
+        welcome.style.alignItems = 'center';
+        welcome.style.transition = 'opacity 0.7s cubic-bezier(0.4,0,0.2,1)';
+
+        // Story mode button only if min width 800 and min height 600
+        let showStoryMode = window.innerWidth >= 800 && window.innerHeight >= 600;
+        let storyBtnHtml = '';
+        if (showStoryMode) {
+            storyBtnHtml = `<button id="storyModeBtn" class="btn" style="margin-top:24px;font-size:1.1em;background:linear-gradient(135deg,#FFD700 0%,#a770ef 100%);color:#270e33;font-weight:bold;">Story mode</button>`;
+        }
+
+        welcome.innerHTML = `
+            <div id="welcomeRocket" style="margin-bottom:32px;animation:rocketUp 2s cubic-bezier(0.4,0,0.2,1) infinite;">
+                <svg width="90" height="90" viewBox="0 0 64 64" fill="none">
+                    <g>
+                        <ellipse cx="32" cy="62" rx="8" ry="2.5" fill="#FFD700" opacity="0.7"/>
+                        <path d="M32 4C36 16 44 24 44 32C44 40 36 48 32 60C28 48 20 40 20 32C20 24 28 16 32 4Z" fill="#a770ef" stroke="#fff" stroke-width="2"/>
+                        <circle cx="32" cy="32" r="7" fill="#fff" stroke="#a770ef" stroke-width="2"/>
+                        <rect x="29" y="52" width="6" height="10" rx="3" fill="#FFD700"/>
+                        <polygon points="32,62 29,52 35,52" fill="#FFD700" opacity="0.8"/>
+                        <path d="M32 14 L32 24" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                        <circle cx="32" cy="12" r="2" fill="#FFD700" opacity="0.9"/>
+                    </g>
+                </svg>
+            </div>
+            <div id="welcomeText" style="font-size:2.6em;font-weight:bold;color:#fff;text-align:center;letter-spacing:2px;animation:fadeInWelcome 1.2s cubic-bezier(0.4,0,0.2,1);">
+                WELCOME TO MUNETIOS Calendar
+            </div>
+            <div id="welcomeDesc" style="font-size:1.3em;color:#e0e0e0;text-align:center;margin-top:18px;max-width:500px;animation:fadeInDesc 1.8s cubic-bezier(0.4,0,0.2,1);">
+                ${randomDesc}
+            </div>
+            <div id="welcomeProgressBar" style="width:320px;height:12px;background:rgba(255,255,255,0.13);border-radius:8px;overflow:hidden;margin-top:32px;">
+                <div id="welcomeProgress" style="height:100%;width:0%;background:linear-gradient(90deg,#a770ef 0%,#FFD700 100%);border-radius:8px;transition:width 0.2s;"></div>
+            </div>
+            ${storyBtnHtml}
+            <div style="margin-top:32px; display:none !important;">
+                <button id="settingsWelcomeBtn" class="btn" style="font-size:1.1em;">Settings</button>
+            </div>
+        `;
+
+        // Animate rocket and text
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes rocketUp {
+                0% { transform: translateY(40px) scale(0.8); opacity:0.7; }
+                20% { transform: translateY(0) scale(1.05); opacity:1; }
+                40% { transform: translateY(-30px) scale(1.1); opacity:1; }
+                60% { transform: translateY(-60px) scale(1.15); opacity:1; }
+                80% { transform: translateY(0) scale(1.05); opacity:1; }
+                100% { transform: translateY(40px) scale(0.8); opacity:0.7; }
+            }
+            @keyframes fadeInWelcome {
+                0% { opacity:0; transform:scale(0.95);}
+                100% { opacity:1; transform:scale(1);}
+            }
+            @keyframes fadeInDesc {
+                0% { opacity:0; transform:translateY(40px);}
+                100% { opacity:1; transform:translateY(0);}
+            }
+            @keyframes fadeInSection {
+                0% { opacity:0; transform:translateY(40px);}
+                100% { opacity:1; transform:translateY(0);}
+            }
+            @keyframes fadeOutWelcome {
+                0% { opacity:1; }
+                100% { opacity:0; }
+            }
+            .story-highlight {
+                box-shadow: 0 0 0 4px #FFD700, 0 0 16px 4px #a770ef88 !important;
+                z-index: 10001 !important;
+                position: relative !important;
+                transition: box-shadow 0.3s, filter 0.2s;
+                filter: brightness(1.25);
+            }
+            .story-tooltip {
+                position: fixed;
+                pointer-events: none;
+                z-index: 10002;
+                background: linear-gradient(135deg,#FFD700 0%,#a770ef 100%);
+                color: #270e33;
+                font-weight: bold;
+                font-size: 1.08em;
+                padding: 12px 22px;
+                border-radius: 18px;
+                box-shadow: 0 4px 24px #a770ef44;
+                white-space: pre-line;
+                max-width: 340px;
+                opacity: 0.98;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Animate progress bar (duration: progressTime)
+        let progress = 0;
+        const progressBar = document.getElementById('welcomeProgress');
+        let startTime = Date.now();
+        let interval = setInterval(() => {
+            let elapsed = Date.now() - startTime;
+            progress = Math.min(100, (elapsed / progressTime) * 100);
+            progressBar.style.width = progress + '%';
+            if (progress >= 100) clearInterval(interval);
+        }, 50);
+
+        // Settings modal for welcome screen
+        let welcomeSettingsModal = document.getElementById('welcomeSettingsModal');
+        if (!welcomeSettingsModal) {
+            welcomeSettingsModal = document.createElement('div');
+            welcomeSettingsModal.id = 'welcomeSettingsModal';
+            welcomeSettingsModal.className = 'modal';
+            welcomeSettingsModal.style.display = 'none';
+            welcomeSettingsModal.innerHTML = `
+                <div class="modal-content liquid-glass" style="max-width: 420px;">
+                    <span class="close" id="closeWelcomeSettingsModal" style="right:18px;top:18px;">&times;</span>
+                    <h2 style="text-align:center;color:#a770ef;">Settings</h2>
+                    <div class="settings-content">
+                        <ul class="options">
+                            <li>
+                                <label>Theme:</label>
+                                <select id="welcomeThemeSelect">
+                                    <option value="light">Light</option>
+                                    <option value="dark" selected>Dark</option>
+                                    <option value="system">System Default</option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>Language:</label>
+                                <select id="welcomeLanguageSelect">
+                                    <option value="en" selected>English</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="zh">Chinese</option>
+                                    <option value="ja">Japanese</option>
+                                    <option value="ru">Russian</option>
+                                    <option value="ar">Arabic</option>
+                                    <option value="hi">Hindi</option>
+                                    <option value="pt">Portuguese</option>
+                                </select>
+                            </li>
+                            <li>
+                                <label for="welcomeReduceTransparencyCheckbox" style="margin-right: 12px;">Reduce Transparency</label>
+                                <label class="toggle-switch" for="welcomeReduceTransparencyCheckbox">
+                                    <input type="checkbox" id="welcomeReduceTransparencyCheckbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(welcomeSettingsModal);
+            document.getElementById('closeWelcomeSettingsModal').onclick = function() {
+                welcomeSettingsModal.style.display = 'none';
+                welcome.style.display = 'flex';
+            };
+            document.getElementById('welcomeThemeSelect').value = localStorage.getItem('theme') || 'dark';
+            document.getElementById('welcomeThemeSelect').onchange = function() {
+                localStorage.setItem('theme', this.value);
+                if (typeof applyTheme === 'function') applyTheme(this.value);
+            };
+            document.getElementById('welcomeLanguageSelect').value = localStorage.getItem('language') || 'en';
+            document.getElementById('welcomeLanguageSelect').onchange = function() {
+                localStorage.setItem('language', this.value);
+                if (typeof applyTranslations === 'function') applyTranslations(this.value);
+            };
+            document.getElementById('welcomeReduceTransparencyCheckbox').checked = localStorage.getItem('reduceTransparency') === 'true';
+            document.getElementById('welcomeReduceTransparencyCheckbox').onchange = function() {
+                localStorage.setItem('reduceTransparency', this.checked);
+                if (typeof applyTransparency === 'function') applyTransparency(this.checked);
+            };
+        }
+
+        document.getElementById('settingsWelcomeBtn').onclick = function() {
+            welcome.style.display = 'none';
+            welcomeSettingsModal.style.display = 'flex';
+        };
+
+        // --- Story Mode with interactive tips/highlights ---
+        function runStoryMode() {
+            // Remove any existing overlay
+            let old = document.getElementById('storyModeOverlay');
+            if (old) old.remove();
+
+            // Remove any highlight
+            document.querySelectorAll('.story-highlight').forEach(el => el.classList.remove('story-highlight'));
+            document.querySelectorAll('.story-tooltip').forEach(el => el.remove());
+
+            let overlay = document.createElement('div');
+            overlay.id = 'storyModeOverlay';
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100vw';
+            overlay.style.height = '100vh';
+            overlay.style.background = 'rgba(39,14,51,0.65)';
+            overlay.style.zIndex = '10000';
+            // Allow pointer events everywhere in story mode
+            overlay.style.pointerEvents = 'none';
+            document.body.appendChild(overlay);
+
+            // Steps: each step can optionally highlight a selector and show a tooltip
+            const steps = [
+                {
+                    tip: "Welcome to Story Mode!\nLet's take a quick interactive tour of Munetios Calendar.\n\nClick Next to begin.",
+                    selector: null,
+                    nextBtn: true
+                },
+                {
+                    tip: "This is the <b>Create</b> button. Click it to add a new event, birthday, or holiday.",
+                    selector: "#createBtn",
+                    nextBtn: true,
+                    waitForClick: "#createBtn"
+                },
+                {
+                    tip: "Here you can choose to create an Event, Birthday, or Holiday. Try clicking <b>Event</b>.",
+                    selector: "#createEventBtn",
+                    nextBtn: true,
+                    waitForClick: "#createEventBtn"
+                },
+                {
+                    tip: "Fill in the event details and click <b>Create Event</b> to add it to your calendar.",
+                    selector: "#eventForm button[type='submit']",
+                    nextBtn: true
+                },
+                {
+                    tip: "Use the <b>View</b> button to switch between Month, Day, Week, Year, Timeline, and Agenda views.",
+                    selector: "#viewBtn",
+                    nextBtn: true,
+                    waitForClick: "#viewBtn"
+                },
+                {
+                    tip: "Try switching to <b>Day</b> or <b>Week</b> view.",
+                    selector: "#viewDropdown",
+                    nextBtn: true
+                },
+                {
+                    tip: "Use the search bar to quickly find events, birthdays, or holidays.",
+                    selector: ".search-bar input",
+                    nextBtn: true
+                },
+                {
+                    tip: "Switch to the <b>Tasks</b> tab to manage your to-dos.",
+                    selector: ".tabs .tab:nth-child(2)",
+                    nextBtn: true,
+                    waitForClick: ".tabs .tab:nth-child(2)"
+                },
+                {
+                    tip: "Mark important dates as <b>Favorites</b> for quick access.",
+                    selector: "#favorites",
+                    nextBtn: true,
+                    waitForClick: "#favorites"
+                },
+                {
+                    tip: "Explore <b>Settings</b> to customize your experience.",
+                    selector: ".settings-icon",
+                    nextBtn: true,
+                    waitForClick: ".settings-icon"
+                },
+                {
+                    tip: "That's it for the tour!\nYou can always revisit this tour by refreshing the page.\n\nClick Done to finish.",
+                    selector: null,
+                    nextBtn: true
+                }
+            ];
+            let step = 0;
+
+            // Helper to show tooltip at mouse or at element
+            function showTooltip(tip, selector) {
+                // Remove old tooltip
+                document.querySelectorAll('.story-tooltip').forEach(el => el.remove());
+                let tooltip = document.createElement('div');
+                tooltip.className = 'story-tooltip';
+                tooltip.innerHTML = tip;
+                document.body.appendChild(tooltip);
+
+                // If selector, position near element, else center
+                if (selector) {
+                    let el = document.querySelector(selector);
+                    if (el) {
+                        let rect = el.getBoundingClientRect();
+                        let top = rect.top + window.scrollY - tooltip.offsetHeight - 16;
+                        if (top < 0) top = rect.bottom + window.scrollY + 16;
+                        let left = rect.left + window.scrollX + rect.width / 2 - tooltip.offsetWidth / 2;
+                        if (left < 0) left = 16;
+                        if (left + tooltip.offsetWidth > window.innerWidth) left = window.innerWidth - tooltip.offsetWidth - 16;
+                        tooltip.style.top = `${top}px`;
+                        tooltip.style.left = `${left}px`;
+                    } else {
+                        tooltip.style.top = '30%';
+                        tooltip.style.left = '50%';
+                        tooltip.style.transform = 'translate(-50%,0)';
+                    }
+                } else {
+                    tooltip.style.top = '30%';
+                    tooltip.style.left = '50%';
+                    tooltip.style.transform = 'translate(-50%,0)';
+                }
+            }
+
+            function highlight(selector) {
+                document.querySelectorAll('.story-highlight').forEach(el => el.classList.remove('story-highlight'));
+                if (selector) {
+                    let el = document.querySelector(selector);
+                    if (el) {
+                        el.classList.add('story-highlight');
+                        el.scrollIntoView({behavior: 'smooth', block: 'center'});
+                        // Enable pointer events for highlighted element
+                        el.style.pointerEvents = 'auto';
+                        // If it's a button and disabled, enable it for the tour
+                        if (el.tagName === 'BUTTON') {
+                            if (el.disabled) {
+                                el.disabled = false;
+                                el.setAttribute('data-story-enabled', 'true');
+                            }
+                            // Visually indicate enabled state
+                            el.style.filter = 'brightness(1.25)';
+                        }
+                    }
+                }
+            }
+
+            function removeHighlight() {
+                document.querySelectorAll('.story-highlight').forEach(el => {
+                    el.classList.remove('story-highlight');
+                    // Restore disabled state if it was enabled for story
+                    if (el.getAttribute('data-story-enabled') === 'true') {
+                        el.disabled = true;
+                        el.removeAttribute('data-story-enabled');
+                    }
+                    // Remove brightness filter
+                    if (el.tagName === 'BUTTON') {
+                        el.style.filter = '';
+                    }
+                });
+            }
+
+            // In story mode, allow pointer events everywhere (no blocking)
+            function setPointerEvents(selector) {
+                document.body.style.pointerEvents = '';
+                let overlay = document.getElementById('storyModeOverlay');
+                if (overlay) overlay.style.pointerEvents = 'none';
+                document.querySelectorAll('.story-highlight').forEach(el => el.style.pointerEvents = '');
+                if (selector) {
+                    let el = document.querySelector(selector);
+                    if (el) el.style.pointerEvents = '';
+                }
+                document.querySelectorAll('.story-tooltip').forEach(el => el.style.pointerEvents = 'auto');
+            }
+
+            function resetPointerEvents() {
+                document.body.style.pointerEvents = '';
+                let overlay = document.getElementById('storyModeOverlay');
+                if (overlay) overlay.style.pointerEvents = 'none';
+                document.querySelectorAll('.story-highlight').forEach(el => el.style.pointerEvents = '');
+                document.querySelectorAll('.story-tooltip').forEach(el => el.style.pointerEvents = '');
+            }
+
+            // Show current step
+            function showStep(idx) {
+                removeHighlight();
+                // Get current step object
+                let s = steps[idx];
+                // Show tooltip and highlight
+                showTooltip(s.tip, s.selector);
+                highlight(s.selector);
+
+                // Add Next/Done button to tooltip if needed
+                let tooltip = document.querySelector('.story-tooltip');
+                if (s.nextBtn && tooltip) {
+                    let btn = document.createElement('button');
+                    btn.className = 'btn';
+                    btn.style.marginTop = '18px';
+                    btn.textContent = (idx === steps.length - 1) ? 'Done' : 'Next';
+                    btn.onclick = function(e) {
+                        e.stopPropagation();
+                        if (idx === steps.length - 1) {
+                            if (overlay) overlay.remove();
+                            removeHighlight();
+                            resetPointerEvents();
+                            document.querySelectorAll('.story-tooltip').forEach(el => el.remove());
+                        } else {
+                            showStep(idx + 1);
+                        }
+                    };
+                    tooltip.appendChild(btn);
+                    // Always allow pointer events for tooltip (button)
+                    tooltip.style.pointerEvents = 'auto';
+                }
+                // If waitForClick, attach handler
+                if (s.waitForClick) {
+                    let el = document.querySelector(s.waitForClick);
+                    if (el) {
+                        // If it's a button and disabled, enable it for the tour
+                        if (el.tagName === 'BUTTON' && el.disabled) {
+                            el.disabled = false;
+                            el.setAttribute('data-story-enabled', 'true');
+                        }
+                        let handler = function(e) {
+                            e.stopPropagation();
+                            el.removeEventListener('click', handler, true);
+                            showStep(idx + 1);
+                            // Remove highlight from previous
+                            removeHighlight();
+                            resetPointerEvents();
+                            document.querySelectorAll('.story-tooltip').forEach(el => el.remove());
+                        };
+                        // Use capture phase to ensure handler fires before default
+                        el.addEventListener('click', handler, true);
+                    }
+                }
+                // After tooltip and highlight, set pointer events
+                setPointerEvents(s.selector);
+            }
+            showStep(step);
+        }
+
+        // Story mode logic
+        if (showStoryMode) {
+            document.getElementById('storyModeBtn').onclick = function() {
+                welcome.style.display = 'none';
+                localStorage.setItem('welcomeScreenClosed', 'true');
+                calendarContent.innerHTML = oldCalendarHTML;
+                setTimeout(runStoryMode, 300);
+            };
+        }
+
+        // After loadTime ms, show section 2 (but only after progress bar is done)
+        setTimeout(() => {
+            let waitForProgress = () => {
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    welcome.innerHTML = `
+                        <div style="margin-bottom:32px;animation:rocketUp 2s cubic-bezier(0.4,0,0.2,1) infinite;">
+                            <svg width="90" height="90" viewBox="0 0 64 64" fill="none">
+                                <g>
+                                    <ellipse cx="32" cy="62" rx="8" ry="2.5" fill="#FFD700" opacity="0.7"/>
+                                    <path d="M32 4C36 16 44 24 44 32C44 40 36 48 32 60C28 48 20 40 20 32C20 24 28 16 32 4Z" fill="#a770ef" stroke="#fff" stroke-width="2"/>
+                                    <circle cx="32" cy="32" r="7" fill="#fff" stroke="#a770ef" stroke-width="2"/>
+                                    <rect x="29" y="52" width="6" height="10" rx="3" fill="#FFD700"/>
+                                    <polygon points="32,62 29,52 35,52" fill="#FFD700" opacity="0.8"/>
+                                    <path d="M32 14 L32 24" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                                    <circle cx="32" cy="12" r="2" fill="#FFD700" opacity="0.9"/>
+                                </g>
+                            </svg>
+                        </div>
+                        <div style="font-size:2.1em;font-weight:bold;color:#fff;text-align:center;letter-spacing:2px;margin-bottom:24px;animation:fadeInSection 1s;">
+                            Get Started with Munetios Calendar
+                        </div>
+                        <div style="font-size:1.2em;color:#e0e0e0;text-align:center;max-width:500px;margin-bottom:24px;animation:fadeInDesc 1.2s;">
+                            Easily manage your events, holidays, and tasks. Enjoy a beautiful, animated experience!
+                        </div>
+                        <button id="doneWelcomeBtn" class="btn" style="margin-bottom:18px;font-size:1.1em;animation:fadeInSection 1.2s;">Done</button>
+                        <div style="position:absolute;bottom:32px;left:50%;transform:translateX(-50%);">
+                            <button id="classicWelcomeBtn" class="btn" style="font-size:1em;">Use Classic Version</button>
+                            <button id="settingsWelcomeBtn2" class="btn" style="font-size:1em;margin-left:8px;">Settings</button>
+                            <p> <a href="https://www.munetios.com/policies/#/terms">Terms</a> | <a href="https://www.munetios.com/policies/#/privacy">Privacy</a> </p>
+                        </div>
+                        ${showStoryMode ? `<button id="storyModeBtn2" class="btn" style="margin-top:24px;font-size:1.1em;background:linear-gradient(135deg,#FFD700 0%,#a770ef 100%);color:#270e33;font-weight:bold;">Story mode</button>` : ''}
+                    `;
+                    document.getElementById('doneWelcomeBtn').onclick = function() {
+                        welcome.style.animation = 'fadeOutWelcome 0.7s cubic-bezier(0.4,0,0.2,1)';
+                        setTimeout(() => {
+                            welcome.style.display = 'none';
+                            localStorage.setItem('welcomeScreenClosed', 'true');
+                            calendarContent.innerHTML = oldCalendarHTML;
+                        }, 700);
+                    };
+                    document.getElementById('classicWelcomeBtn').onclick = function() {
+                        window.open('https://calendar.munetios.com/', '_blank');
+                    };
+                    document.getElementById('settingsWelcomeBtn2').onclick = function() {
+                        welcome.style.display = 'none';
+                        welcomeSettingsModal.style.display = 'flex';
+                    };
+                    // Story mode button in section 2
+                    if (showStoryMode && document.getElementById('storyModeBtn2')) {
+                        document.getElementById('storyModeBtn2').onclick = function() {
+                            welcome.style.display = 'none';
+                            localStorage.setItem('welcomeScreenClosed', 'true');
+                            calendarContent.innerHTML = oldCalendarHTML;
+                            setTimeout(runStoryMode, 300);
+                        };
+                    }
+                } else {
+                    setTimeout(waitForProgress, 100);
+                }
+            };
+            waitForProgress();
+        }, loadTime);
+    }
+
+    // Show on first load
+    document.addEventListener('DOMContentLoaded', showWelcomeScreen);
 
         document.querySelector('.apps-icon').addEventListener('click', function(e) {
             e.stopPropagation();
@@ -2384,6 +2826,7 @@ html {
                     <div style="margin-top:18px;padding-top:12px;border-top:1px solid rgba(167,112,239,0.18);font-size:0.98em;color:#a770ef;">
                         <b>Version History</b>
                         <ul style="margin:8px 0 0 18px; color:#e0e0e0;">
+
                             <li><b>1.02</b> – New apps menu and made birthdays repeat in year</li>
                             <li><b>1.01</b> – Bug fixes and improvements</li>
                             <li><b>1.00</b> – Released</li>
@@ -3158,80 +3601,62 @@ html {
         let month = currentMonth;
         let date = parseInt(dateDiv.textContent);
 
-      // Remove any previous context-wrapper before creating a new one
-let oldWrapper = document.querySelector('.context-wrapper');
-if (oldWrapper) {
-    oldWrapper.parentNode.removeChild(oldWrapper);
-}
+        // Remove any previous context-wrapper before creating a new one
+        let oldWrapper = document.querySelector('.context-wrapper');
+        if (oldWrapper) {
+            oldWrapper.parentNode.removeChild(oldWrapper);
+        }
 
-let wrapper = document.createElement('div');
-wrapper.className = 'context-wrapper';
-wrapper.style.position = 'absolute';
-wrapper.style.minWidth = '180px';
-wrapper.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.22) 0%, rgba(167,112,239,0.13) 100%)';
-wrapper.style.borderRadius = '24px';
-wrapper.style.boxShadow = '0 8px 32px 0 rgba(167,112,239,0.18), 0 1.5px 8px 0 rgba(255,255,255,0.12) inset';
-wrapper.style.border = '1.5px solid rgba(167,112,239,0.28)';
-wrapper.style.zIndex = '1200';
-wrapper.style.padding = '12px 10px';
-wrapper.style.display = 'flex';
-wrapper.style.flexDirection = 'column';
-wrapper.style.alignItems = 'stretch';
-document.body.appendChild(wrapper);
+        let wrapper = document.createElement('div');
+        wrapper.className = 'context-wrapper';
+        wrapper.style.position = 'absolute';
+        wrapper.style.minWidth = '180px';
+        wrapper.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.22) 0%, rgba(167,112,239,0.13) 100%)';
+        wrapper.style.borderRadius = '24px';
+        wrapper.style.boxShadow = '0 8px 32px 0 rgba(167,112,239,0.18), 0 1.5px 8px 0 rgba(255,255,255,0.12) inset';
+        wrapper.style.border = '1.5px solid rgba(167,112,239,0.28)';
+        wrapper.style.zIndex = '1200';
+        wrapper.style.padding = '12px 10px';
+        wrapper.style.display = 'flex';
+        wrapper.style.flexDirection = 'column';
+        wrapper.style.alignItems = 'stretch';
+        document.body.appendChild(wrapper);
 
-wrapper.classList.add('active');
-let rect = cell.getBoundingClientRect();
-wrapper.style.top = (window.scrollY + rect.bottom + 8) + 'px';
-wrapper.style.left = (window.scrollX + rect.left) + 'px';
+        wrapper.classList.add('active');
+        let rect = cell.getBoundingClientRect();
+        wrapper.style.top = (window.scrollY + rect.bottom + 8) + 'px';
+        wrapper.style.left = (window.scrollX + rect.left) + 'px';
 
-// prefill selected date into hidden event form
-document.getElementById('eventDate').value = `${year}-${String(month+1).padStart(2,'0')}-${String(date).padStart(2,'0')}`;
+        // prefill selected date into hidden event form
+        document.getElementById('eventDate').value = `${year}-${String(month+1).padStart(2,'0')}-${String(date).padStart(2,'0')}`;
 
-wrapper.innerHTML = `
-    <div class="item">
-        <button class="btn" id="newEventFromDate"  title="This action is unavailable because it wont open the create event modal." aria-label="This action is unavailable because it wont open the create event modal." style="opacity:0.5;cursor:not-allowed;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M12 5v14m-7-7h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-            <div class="toolbar-label">New Event</div>
-        </button>
-        <button class="btn" id="printFromDate" title="Print" aria-label="Print">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        wrapper.innerHTML = `
+            <div class="item">
+            <button class="btn" id="printFromDate" title="Print" aria-label="Print">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M6 9V4a2 2 0 012-2h8a2 2 0 012 2v5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M6 14h12v7H6v-7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M6 18h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <div class="toolbar-label">Print</div>
-        </button>
-        <button class="btn" id="shareFromDate" title="Share" aria-label="Share">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                </svg>
+                <div class="toolbar-label">Print</div>
+            </button>
+            <button class="btn" id="shareFromDate" title="Share" aria-label="Share">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M12 16V4m0 0l-4 4m4-4l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <div class="toolbar-label">Share</div>
-        </button>
-        <button class="btn" id="favoriteFromDate" title="Favorite" aria-label="Favorite">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                </svg>
+                <div class="toolbar-label">Share</div>
+            </button>
+            <button class="btn" id="favoriteFromDate" title="Favorite" aria-label="Favorite">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <div class="toolbar-label">Favorite</div>
-        </button>
-    </div>
-    <button class="btn" id="closeContextWrapperBtn" style="margin-top:12px;background:#a770ef;color:#fff;font-weight:bold;">Close</button>
-`;
-
-wrapper.querySelector('#newEventFromDate').onclick = function() {
-    const modal = document.getElementById('createEventModal');
-    if (modal) {
-        modal.style.display = 'flex';
-    } else {
-        console.error('createEventModal not found in DOM');
-    }
-    if (wrapper && wrapper.parentNode) {
-        wrapper.parentNode.removeChild(wrapper);
-    }
-};
+                </svg>
+                <div class="toolbar-label">Favorite</div>
+            </button>
+            </div>
+            <button class="btn" id="closeContextWrapperBtn" style="margin-top:12px;background:#a770ef;color:#fff;font-weight:bold;">Close</button>
+        `;
 
 wrapper.querySelector('#printFromDate').onclick = function() {
     const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(date).padStart(2,'0')}`;
