@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Munetios Calendar</title>
+    <title>Munetios Calendar Beta v1</title>
     <link rel="icon" type="image/x-icon" href="logo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="logo.png">
     <link rel="icon" type="image/png" sizes="32x32" href="logo.png">
@@ -1858,16 +1858,24 @@ html {
                     document.querySelector('.more-wrapper').classList.remove('active');
                 };
             }
-            // Settings
+            // about
             if (moreItems[1]) {
                 moreItems[1].onclick = function() {
+                    document.getElementById('aboutModal').style.display = 'flex';
+                    document.querySelector('.more-wrapper').classList.remove('active');
+                };
+            }
+
+            // Settings
+            if (moreItems[2]) {
+                moreItems[2].onclick = function() {
                     document.getElementById('settingsModal').style.display = 'flex';
                     document.querySelector('.more-wrapper').classList.remove('active');
                 };
             }
             // Use Classic Version
-            if (moreItems[2]) {
-                moreItems[2].onclick = function() {
+            if (moreItems[3]) {
+                moreItems[3].onclick = function() {
                     window.open('https://calendar.munetios.com/');
                     document.querySelector('.more-wrapper').classList.remove('active');
                 };
