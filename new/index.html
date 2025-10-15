@@ -883,7 +883,6 @@ html {
                     </button>
                 </div>
             </div>
-            <button class="btn hide-805" onclick="window.open('https://calendar.munetios.com/')">Use Classic Version</button>
             <div class="events-icon">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"></rect>
@@ -930,9 +929,6 @@ html {
                 </div>
                 <div class="item">
                     <span>Settings</span>
-                </div>
-                <div class="item">
-                    <span>Use Classic Version</span>
                 </div>
                 <hr>
                 <div class="item">
@@ -1774,7 +1770,6 @@ html {
                         </div>
                         <button id="doneWelcomeBtn" class="btn" style="margin-bottom:18px;font-size:1.1em;animation:fadeInSection 1.2s;">Done</button>
                         <div style="position:absolute;bottom:32px;left:50%;transform:translateX(-50%);">
-                            <button id="classicWelcomeBtn" class="btn" style="font-size:1em;">Use Classic Version</button>
                             <button id="settingsWelcomeBtn2" class="btn" style="font-size:1em;margin-left:8px;">Settings</button>
                             <p> <a href="https://www.munetios.com/policies/#/terms">Terms</a> | <a href="https://www.munetios.com/policies/#/privacy">Privacy</a> </p>
                         </div>
@@ -1873,13 +1868,7 @@ html {
                     document.querySelector('.more-wrapper').classList.remove('active');
                 };
             }
-            // Use Classic Version
-            if (moreItems[3]) {
-                moreItems[3].onclick = function() {
-                    window.open('https://calendar.munetios.com/');
-                    document.querySelector('.more-wrapper').classList.remove('active');
-                };
-            }
+   
             // Download App (prompt PWA install if available)
             // Always ensure the item exists and is clickable
             const downloadAppItem = Array.from(moreItems).find(item =>
