@@ -1,8 +1,9 @@
 {
   "name": "Munetios Calendar",
   "short_name": "Calendar",
-  "description": "Munetios Calendar is a modern, user-friendly calendar application designed to manage your schedule, events, and holidays.",
+  "description": "Munetios Calendar is a modern, offline-ready, and installable calendar to manage events, schedules, and holidays.",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#270e33",
   "theme_color": "#270e33",
@@ -11,12 +12,14 @@
     {
       "src": "./logo.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "./logo.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
