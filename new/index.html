@@ -934,9 +934,27 @@ html {
                     <span>Settings</span>
                 </div>
                 <hr>
-                <div class="item">
-                    Download Munetios Calendar App
-                </div>
+             <button id="installApp" style="display:none;">
+  Install Munetios Calendar
+</button>
+
+<script>
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const btn = document.getElementById('installApp');
+  btn.style.display = 'block';
+  btn.onclick = async () => {
+    btn.style.display = 'none';
+    deferredPrompt.prompt();
+    const choice = await deferredPrompt.userChoice;
+    if (choice.outcome === 'accepted') console.log('App installed');
+    deferredPrompt = null;
+  };
+});
+</script>
+
             </div>
         </div>
     </header> 
@@ -1872,44 +1890,7 @@ html {
                 };
             }
    
-            // Download App (prompt PWA install if available)
-            // Always ensure the item exists and is clickable
-            const downloadAppItem = Array.from(moreItems).find(item =>
-                item.textContent.trim().toLowerCase().includes('download munetios calendar app')
-            );
-            if (downloadAppItem) {
-                downloadAppItem.onclick = function() {
-                    document.querySelector('.more-wrapper').classList.remove('active');
-                    try {
-                        if (window.deferredPrompt) {
-                            window.deferredPrompt.prompt();
-                            window.deferredPrompt.userChoice.then(function(choiceResult) {
-                                if (choiceResult.outcome === 'accepted') {
-                                    showToast('Munetios Calendar App is installing...');
-                                } else {
-                                    showToast('App install dismissed.');
-                                }
-                                window.deferredPrompt = null;
-                            }).catch(function(err) {
-                                showToast('App install failed: ' + (err && err.message ? err.message : 'Unknown error'));
-                                window.deferredPrompt = null;
-                            });
-                        } else {
-                            showToast('To install the Munetios Calendar App, use your browser\'s "Add to Home Screen" or "Install App" option.', { duration: 6000 });
-                        }
-                    } catch (err) {
-                        showToast('App install failed: ' + (err && err.message ? err.message : 'Unknown error'));
-                    }
-                };
-            }
         }
-
-        // Listen for PWA install prompt event
-        window.deferredPrompt = null;
-        window.addEventListener('beforeinstallprompt', function(e) {
-            e.preventDefault();
-            window.deferredPrompt = e;
-        });
 
 
         document.getElementById('settingsModal').style.display = 'none';
