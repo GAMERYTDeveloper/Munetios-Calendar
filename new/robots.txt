@@ -1,0 +1,27 @@
+User-Agent: *
+Disallow: /
+User-Agent: Googlebot
+Allow: /
+Disallow: /create/
+Disallow: /events/
+Disallow: /birthdays/
+Disallow: /backup/
+Disallow: /restore/
+Disallow: /holidays/
+User-Agent: Bingbot
+Allow: /
+Disallow: /create/
+Disallow: /events/
+Disallow: /birthdays/
+Disallow: /backup/
+Disallow: /restore/
+Disallow: /holidays/
+
+User-Agent: DuckDuckGobot
+Allow: /
+Disallow: /create/
+Disallow: /events/
+Disallow: /birthdays/
+Disallow: /backup/
+Disallow: /restore/
+Disallow: /holidays/
