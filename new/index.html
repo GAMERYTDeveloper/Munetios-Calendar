@@ -13,6 +13,18 @@
     <meta name="author" content="GAMERYTDeveloper">
     <meta name="theme-color" content="#270e33">
      <link rel="manifest" href="./new/manifest.webmanifest">
+     <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (window.top !== window.self) {
+        // Hide everything (html + body)
+        document.documentElement.style.display = "none";  
+        // Optional: redirect out of iframe
+        try { window.top.location = window.location; } catch (e) {}
+      }
+    });
+  </script>
+     <!-- Block Iframe embeding -->
+    <meta http-equiv="X-Frame-Options" content="DENY">
  <script>
   // Register service worker
   if ('serviceWorker' in navigator) {
